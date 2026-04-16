@@ -1,0 +1,54 @@
+text_content = """
+GPT-2 is a large language model. It was trained on a massive amount of text.
+Fine-tuning is the process of taking a pre-trained model and training it further on a specific dataset.
+This allows the model to learn the style and vocabulary of the new data.
+The internship task involves training this model to generate coherent text.
+"""
+
+with open("data.txt", "w") as f:
+    f.write(text_content * 50) 
+print("File 'data.txt' has been created automatically!")
+
+!pip install transformers[torch] datasets -q
+
+import torch
+from transformers import GPT2Tokenizer, GPT2LMHeadModel, Trainer, TrainingArguments, DataCollatorForLanguageModeling
+from datasets import load_dataset
+
+
+model_name = "gpt2"
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+
+tokenizer.pad_token = tokenizer.eos_token 
+model = GPT2LMHeadModel.from_pretrained(model_name)
+
+
+def tokenize_function(examples):
+    return tokenizer(examples["text"], truncation=True, padding="max_length", max_length=128)
+
+dataset = load_dataset("text", data_files={"train": "data.txt"})
+tokenized_datasets = dataset.map(tokenize_function, batched=True, remove_columns=["text"])
+
+data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+
+
+training_args = TrainingArguments(
+    output_dir="./gpt2-result",
+    num_train_epochs=3, 
+    per_device_train_batch_size=4,
+    save_steps=100,
+    logging_steps=10,
+    eval_strategy="no", 
+    report_to="none" 
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenized_datasets["train"],
+    data_collator=data_collator,
+)
+
+print("Starting training... This is it!")
+trainer.train()
+print("Training complete! Your AI is now trained.")
