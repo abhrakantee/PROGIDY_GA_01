@@ -15,4 +15,4 @@ This project involves fine-tuning the GPT-2 transformer model on a custom datase
 ## 📂 Download Trained Model
 Because the fine-tuned GPT-2 model file is too large for GitHub, you can download the final trained weights (`.zip`) from my Google Drive here:
 
-👉 [**Download Trained Model Weights**](https://drive.google.com/file/d/13mizaSCW7AiYz7yKVdDsDwVwvLKkRcyH/view?usp=drive_link)
+👉 [**Download Trained Model Weights**](https://drive.google.com/file/d/13mizaSCW7AiYz7yKVdDsDwVwvLKkRcyH/view?usp=sharing)
